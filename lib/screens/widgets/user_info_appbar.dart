@@ -10,22 +10,18 @@ class UserInfoBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
     return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: GlobalVariables.appBarGradient,
-      ),
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
       child: RichText(
           text: TextSpan(
         text: "Hello, ",
         style: const TextStyle(
-          fontSize: 16,
+          fontSize: 20,
         ),
         children: [
           TextSpan(
             text: user.name,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
           ),

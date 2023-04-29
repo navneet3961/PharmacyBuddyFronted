@@ -19,6 +19,16 @@ class User {
     // this.token = "",
   });
 
+  User.Empty({
+    this.id = '',
+    this.name = '',
+    this.email = '',
+    this.password = '',
+    this.isBlocked = true,
+    this.isAdmin = false,
+    // this.token = "",
+  });
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,

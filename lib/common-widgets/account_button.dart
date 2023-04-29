@@ -16,7 +16,7 @@ class AccountButton extends StatelessWidget {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
-        height: 40,
+        height: 50,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white, width: 0.0),
           borderRadius: BorderRadius.circular(50),
@@ -30,7 +30,10 @@ class AccountButton extends StatelessWidget {
             ),
           ),
           onPressed: onTap,
-          child: CustomText(str: text),
+          child: CustomText(
+            str: text,
+            size: 18,
+          ),
         ),
       ),
     );

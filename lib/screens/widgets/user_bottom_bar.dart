@@ -5,15 +5,15 @@ import 'package:pharmacy_buddy/utils/constants.dart';
 
 enum BarItem { home, profile, cart }
 
-class BottomBar extends StatefulWidget {
+class UserBottomBar extends StatefulWidget {
   static const String routeName = '/bottomBar-screen';
-  const BottomBar({super.key});
+  const UserBottomBar({super.key});
 
   @override
-  State<BottomBar> createState() => _BottomBarState();
+  State<UserBottomBar> createState() => _BottomBarState();
 }
 
-class _BottomBarState extends State<BottomBar> {
+class _BottomBarState extends State<UserBottomBar> {
   int _page = BarItem.profile.index;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;

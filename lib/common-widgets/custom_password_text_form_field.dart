@@ -23,6 +23,8 @@ class _CustomPasswordTextFormFieldState
       controller: widget.controller,
       obscureText: obscureText,
       maxLength: 12,
+      cursorColor: Colors.black38,
+      cursorWidth: 1,
       decoration: InputDecoration(
         labelText: widget.hintText,
         hintText: widget.hintText,

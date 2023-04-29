@@ -1,9 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/account_button.dart';
-import 'package:pharmacy_buddy/common-widgets/user_info_appbar.dart';
+import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
+import 'package:pharmacy_buddy/screens/widgets/user_info_appbar.dart';
 import 'package:pharmacy_buddy/services/shared_preferences.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -12,7 +16,7 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
+        preferredSize: const Size.fromHeight(60),
         child: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
@@ -26,26 +30,16 @@ class AccountScreen extends StatelessWidget {
             children: [
               Image.network(
                 'assets/images/logo.png',
-                height: 40,
+                height: 50,
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                child: Row(
-                  children: const [
-                    Icon(Icons.notifications_outlined),
-                    SizedBox(width: 5),
-                    Icon(Icons.search_outlined),
-                  ],
-                ),
-              ),
+              const UserInfoBar()
             ],
           ),
         ),
       ),
       body: Column(
         children: const [
-          UserInfoBar(),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Buttons(),
         ],
       ),
@@ -60,7 +54,9 @@ class Buttons extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<void> logout() async {
       await PrefService.destroyCache();
-      // ignore: use_build_context_synchronously
+
+      Provider.of<UserProvider>(context, listen: false).emptyUser();
+
       Navigator.pushNamedAndRemoveUntil(
         context,
         AuthScreen.routeName,

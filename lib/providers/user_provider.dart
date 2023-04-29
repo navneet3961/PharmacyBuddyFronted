@@ -14,4 +14,9 @@ class UserProvider extends ChangeNotifier {
     _user = User.fromJson(user);
     notifyListeners();
   }
+
+  void emptyUser() {
+    _user = User.Empty();
+    notifyListeners();
+  }
 }

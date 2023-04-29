@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pharmacy_buddy/common-widgets/bottom_bar.dart';
-import 'package:pharmacy_buddy/providers/user_provider.dart';
-import 'package:provider/provider.dart';
-// import 'package:pharmacy_buddy/providers/user_provider.dart';
-// import 'package:provider/provider.dart';
+import 'package:pharmacy_buddy/screens/widgets/search_bar.dart';
+import 'package:pharmacy_buddy/utils/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home-screen';
@@ -14,17 +11,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    super.dispose();
+    _searchController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
-
-    return Center(
-      child: Text(user.toString()),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: GlobalVariables.appBarGradient,
+            ),
+          ),
+          title: Container(
+            width: double.infinity,
+            height: 40,
+            margin: const EdgeInsets.all(10),
+            child: SearchBar(
+              controller: _searchController,
+              hintText: "Search Medicines",
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

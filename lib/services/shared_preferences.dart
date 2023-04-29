@@ -13,6 +13,6 @@ class PrefService {
 
   static Future destroyCache() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.remove("x-access-token");
+    preferences.setString("x-access-token", "");
   }
 }

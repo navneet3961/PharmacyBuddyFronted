@@ -13,6 +13,8 @@ class CustomTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      cursorColor: Colors.black38,
+      cursorWidth: 1,
       decoration: InputDecoration(
         labelText: hintText,
         hintText: hintText,
