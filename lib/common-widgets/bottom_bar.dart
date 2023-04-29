@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacy_buddy/screens/account_screen.dart';
 import 'package:pharmacy_buddy/screens/home_screen.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 
@@ -13,15 +14,13 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-  int _page = BarItem.home.index;
+  int _page = BarItem.profile.index;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;
 
   List<Widget> pages = [
     const HomeScreen(),
-    const Center(
-      child: Text("Account Page"),
-    ),
+    const AccountScreen(),
     const Center(
       child: Text("Cart Page"),
     ),
