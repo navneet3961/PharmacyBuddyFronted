@@ -3,8 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/router.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
-import 'package:pharmacy_buddy/screens/home_screen.dart';
-import 'package:pharmacy_buddy/screens/widgets/user_bottom_bar.dart';
+import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
+import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 import 'package:pharmacy_buddy/services/auth_service.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +56,9 @@ class _MyAppState extends State<MyApp> {
         ),
         onGenerateRoute: (settings) => generateRoute(settings),
         home: Provider.of<UserProvider>(context).user.id.isNotEmpty
-            ? const UserBottomBar()
+            ? Provider.of<UserProvider>(context).user.isAdmin
+                ? const AdminScreen()
+                : const UserBottomBar()
             : const AuthScreen());
   }
 }

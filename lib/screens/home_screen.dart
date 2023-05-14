@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pharmacy_buddy/screens/widgets/search_bar.dart';
+import 'package:pharmacy_buddy/providers/user_provider.dart';
+import 'package:pharmacy_buddy/screens/widgets/search_box.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home-screen';
@@ -21,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(Provider.of<UserProvider>(context).user.isAdmin);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -36,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: double.infinity,
             height: 40,
             margin: const EdgeInsets.all(10),
-            child: SearchBar(
+            child: SearchBox(
               controller: _searchController,
               hintText: "Search Medicines",
             ),

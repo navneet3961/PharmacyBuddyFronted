@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/account_button.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
-import 'package:pharmacy_buddy/screens/widgets/user_info_appbar.dart';
+import 'package:pharmacy_buddy/screens/user/user_info_appbar.dart';
 import 'package:pharmacy_buddy/services/shared_preferences.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 import 'package:provider/provider.dart';
@@ -37,8 +37,8 @@ class AccountScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: const [
+      body: const Column(
+        children: [
           SizedBox(height: 15),
           Buttons(),
         ],

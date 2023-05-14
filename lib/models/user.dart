@@ -19,7 +19,7 @@ class User {
     // this.token = "",
   });
 
-  User.Empty({
+  User.empty({
     this.id = '',
     this.name = '',
     this.email = '',

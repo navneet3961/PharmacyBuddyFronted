@@ -16,7 +16,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   void emptyUser() {
-    _user = User.Empty();
+    _user = User.empty();
     notifyListeners();
   }
 }

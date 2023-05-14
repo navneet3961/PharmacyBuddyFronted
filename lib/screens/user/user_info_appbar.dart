@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
-import 'package:pharmacy_buddy/utils/constants.dart';
 import 'package:provider/provider.dart';
 
 class UserInfoBar extends StatelessWidget {

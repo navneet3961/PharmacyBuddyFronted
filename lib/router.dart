@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacy_buddy/screens/admin/add_product_screen.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
 import 'package:pharmacy_buddy/screens/home_screen.dart';
-import 'package:pharmacy_buddy/screens/widgets/user_bottom_bar.dart';
+import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
+import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -14,6 +16,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case UserBottomBar.routeName:
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => const UserBottomBar());
+    case AdminScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => const AdminScreen());
+    case AddProductScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => const AddProductScreen());
     default:
       return MaterialPageRoute(
         settings: routeSettings,
