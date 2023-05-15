@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pharmacy_buddy/screens/admin/add_product_screen.dart';
+import 'package:pharmacy_buddy/screens/admin/add_item_screen.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
 import 'package:pharmacy_buddy/screens/home_screen.dart';
 import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';

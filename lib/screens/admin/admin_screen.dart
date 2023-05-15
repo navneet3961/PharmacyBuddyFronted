@@ -1,7 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/bottom_bar_item.dart';
+import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
+import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/screens/admin/posts_screen.dart';
+import 'package:pharmacy_buddy/screens/auth_screen.dart';
+import 'package:pharmacy_buddy/services/shared_preferences.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
+import 'package:provider/provider.dart';
 
 enum BarItem { posts, analytics, inbox }
 
@@ -32,6 +38,18 @@ class _AdminScreenState extends State<AdminScreen> {
     });
   }
 
+  Future<void> logout() async {
+    await PrefService.destroyCache();
+
+    Provider.of<UserProvider>(context, listen: false).emptyUser();
+
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AuthScreen.routeName,
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,20 +66,31 @@ class _AdminScreenState extends State<AdminScreen> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.network(
+              Image.asset(
                 'assets/images/logo.png',
                 height: 50,
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                child: const Text(
-                  "Admin",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black),
+                child: PopupMenuButton(
+                  position: PopupMenuPosition.under,
+                  tooltip: "Logout",
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      onTap: logout,
+                      child: const Row(
+                        children: [
+                          Icon(Icons.logout),
+                          SizedBox(width: 5),
+                          CustomText(str: "Logout"),
+                        ],
+                      ),
+                    )
+                  ],
+                  child: const CustomText(
+                      str: "Admin", size: 20, weight: FontWeight.w600),
                 ),
-              ),
+              )
             ],
           ),
         ),

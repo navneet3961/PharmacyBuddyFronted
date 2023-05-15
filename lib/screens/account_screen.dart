@@ -28,7 +28,7 @@ class AccountScreen extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.network(
+              Image.asset(
                 'assets/images/logo.png',
                 height: 50,
               ),

@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text_form_field.dart';
+import 'package:pharmacy_buddy/services/admin_service.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
+import 'package:pharmacy_buddy/utils/image_picker.dart';
+import 'package:pharmacy_buddy/utils/snackbar.dart';
 
 class AddProductScreen extends StatefulWidget {
   static const String routeName = '/add-product-screen';
@@ -12,10 +16,13 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
+  File? image;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
+  final _addItemFromKey = GlobalKey<FormState>();
+  final AdminService _adminService = AdminService();
 
   @override
   void dispose() {
@@ -24,6 +31,28 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _priceController.dispose();
     _quantityController.dispose();
     super.dispose();
+  }
+
+  void addItemToDatabase() {
+    if (_addItemFromKey.currentState!.validate() && image != null) {
+      _adminService.addItem(
+          context: context,
+          name: _nameController.text,
+          description: _descriptionController.text,
+          price: double.parse(_priceController.text),
+          quantity: int.parse(_quantityController.text),
+          image: image!);
+    } else {
+      showSnackBar(context, "Something went wrong");
+    }
+  }
+
+  void selectImage() async {
+    var res = await pickImage();
+
+    setState(() {
+      image = res;
+    });
   }
 
   @override
@@ -43,7 +72,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
             str: "Add Medicine",
             size: 24,
             weight: FontWeight.w400,
-            color: Colors.black,
           ),
         ),
       ),
@@ -51,34 +79,40 @@ class _AddProductScreenState extends State<AddProductScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
+            key: _addItemFromKey,
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    print("Hello");
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.folder_open,
-                          size: 30,
+                image != null
+                    ? Image.file(
+                        image!,
+                        width: double.infinity,
+                        height: 200,
+                        fit: BoxFit.fill,
+                      )
+                    : GestureDetector(
+                        onTap: selectImage,
+                        child: Container(
+                          width: double.infinity,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.black,
+                            ),
+                          ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.folder_open,
+                                size: 30,
+                              ),
+                              SizedBox(height: 12),
+                              Text("Select Medicine Image"),
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 12),
-                        Text("Select Medicine Image"),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
                 const SizedBox(height: 12),
                 CustomTextFormField(
                   controller: _nameController,
@@ -101,6 +135,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 CustomTextFormField(
                   controller: _quantityController,
                   hintText: "Quantity",
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: addItemToDatabase,
+                  style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all(
+                      const Size(25, 50),
+                    ),
+                  ),
+                  child: const Text(
+                    "Add Item",
+                  ),
                 ),
               ],
             ),

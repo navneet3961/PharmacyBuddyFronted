@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pharmacy_buddy/screens/admin/add_product_screen.dart';
+import 'package:pharmacy_buddy/screens/admin/add_item_screen.dart';
 
 class PostsScreen extends StatefulWidget {
   const PostsScreen({super.key});
