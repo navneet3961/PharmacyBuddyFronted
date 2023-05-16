@@ -56,8 +56,11 @@ class User {
 
   String toJson() => json.encode(toMap());
 
-  // Here added ["data"] because all the data about the user is in data key
   factory User.fromJson(String source) =>
+      User.fromMap(json.decode(source)["data"]);
+
+  // Here added ["data"] because all the data about the user is in data key
+  factory User.fromJsonData(String source) =>
       User.fromMap(json.decode(source)["data"]);
 
   @override

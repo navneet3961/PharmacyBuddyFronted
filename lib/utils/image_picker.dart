@@ -3,7 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 Future<File> pickImage() async {
-  var image;
+  File? image;
 
   try {
     var file = await FilePicker.platform
@@ -16,5 +16,5 @@ Future<File> pickImage() async {
     debugPrint(e.toString());
   }
 
-  return image;
+  return image!;
 }

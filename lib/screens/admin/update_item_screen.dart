@@ -1,28 +1,40 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text_form_field.dart';
+import 'package:pharmacy_buddy/models/item.dart';
 import 'package:pharmacy_buddy/services/admin_service.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
-import 'package:pharmacy_buddy/utils/image_picker.dart';
 import 'package:pharmacy_buddy/utils/snackbar.dart';
 
-class AddItemScreen extends StatefulWidget {
-  static const String routeName = '/add-item-screen';
-  const AddItemScreen({super.key});
+class UpdateItemScreen extends StatefulWidget {
+  final Item? item;
+  static const String routeName = '/update-item-screen';
+  const UpdateItemScreen({super.key, this.item});
 
   @override
-  State<AddItemScreen> createState() => _AddItemScreenState();
+  State<UpdateItemScreen> createState() => _UpdateItemScreenState();
 }
 
-class _AddItemScreenState extends State<AddItemScreen> {
-  File? image;
+class _UpdateItemScreenState extends State<UpdateItemScreen> {
+  late final String _id;
+  late final String _imageUrl;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   final _addItemFromKey = GlobalKey<FormState>();
   final AdminService _adminService = AdminService();
+
+  @override
+  void initState() {
+    _id = super.widget.item!.id;
+    _imageUrl = super.widget.item!.imageUrl;
+    _nameController.text = super.widget.item!.name;
+    _descriptionController.text = super.widget.item!.description;
+    _priceController.text = super.widget.item!.price.toString();
+    _quantityController.text = super.widget.item!.quantity.toString();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -33,26 +45,19 @@ class _AddItemScreenState extends State<AddItemScreen> {
     super.dispose();
   }
 
-  void addItemToDatabase() {
-    if (_addItemFromKey.currentState!.validate() && image != null) {
-      _adminService.addItem(
+  void updateItemToDatabase() {
+    if (_addItemFromKey.currentState!.validate()) {
+      _adminService.updateItem(
           context: context,
+          id: _id,
           name: _nameController.text,
           description: _descriptionController.text,
           price: double.parse(_priceController.text),
           quantity: int.parse(_quantityController.text),
-          image: image!);
+          imageUrl: _imageUrl);
     } else {
       showSnackBar(context, "Something went wrong");
     }
-  }
-
-  void selectImage() async {
-    var res = await pickImage();
-
-    setState(() {
-      image = res;
-    });
   }
 
   @override
@@ -69,7 +74,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
             ),
           ),
           title: const CustomText(
-            str: "Add Medicine",
+            str: "Update Medicine",
             size: 24,
             weight: FontWeight.w400,
           ),
@@ -82,37 +87,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
             key: _addItemFromKey,
             child: Column(
               children: [
-                image != null
-                    ? Image.file(
-                        image!,
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.fill,
-                      )
-                    : GestureDetector(
-                        onTap: selectImage,
-                        child: Container(
-                          width: double.infinity,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.black,
-                            ),
-                          ),
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.folder_open,
-                                size: 30,
-                              ),
-                              SizedBox(height: 12),
-                              Text("Select Medicine Image"),
-                            ],
-                          ),
-                        ),
-                      ),
+                Image.network(
+                  _imageUrl,
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.fill,
+                ),
                 const SizedBox(height: 12),
                 CustomTextFormField(
                   controller: _nameController,
@@ -137,17 +117,35 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   hintText: "Quantity",
                 ),
                 const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: addItemToDatabase,
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(
-                      const Size(25, 50),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: updateItemToDatabase,
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(
+                          const Size(25, 50),
+                        ),
+                      ),
+                      child: const Text(
+                        "Update Item",
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    "Add Item",
-                  ),
-                ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(
+                          const Size(25, 50),
+                        ),
+                      ),
+                      child: const Text(
+                        "Cancel",
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),

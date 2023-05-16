@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
+import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
 import 'package:pharmacy_buddy/screens/home_screen.dart';
 import 'package:pharmacy_buddy/services/shared_preferences.dart';
 import 'package:pharmacy_buddy/utils/error_handling.dart';
@@ -66,9 +67,12 @@ class AuthService {
 
           Provider.of<UserProvider>(context, listen: false).setUser(res.body);
 
+          bool isAdmin =
+              Provider.of<UserProvider>(context, listen: false).user.isAdmin;
+
           Navigator.pushNamedAndRemoveUntil(
             context,
-            HomeScreen.routeName,
+            isAdmin ? AdminScreen.routeName : HomeScreen.routeName,
             (route) => false,
           );
         },
