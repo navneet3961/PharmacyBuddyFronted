@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
-import 'package:pharmacy_buddy/screens/home_screen.dart';
+import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 import 'package:pharmacy_buddy/services/shared_preferences.dart';
 import 'package:pharmacy_buddy/utils/error_handling.dart';
 import 'package:pharmacy_buddy/utils/snackbar.dart';
@@ -72,7 +72,7 @@ class AuthService {
 
           Navigator.pushNamedAndRemoveUntil(
             context,
-            isAdmin ? AdminScreen.routeName : HomeScreen.routeName,
+            isAdmin ? AdminScreen.routeName : UserBottomBar.routeName,
             (route) => false,
           );
         },

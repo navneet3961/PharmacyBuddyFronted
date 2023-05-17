@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SearchBox extends StatelessWidget {
+  final void Function(String) callback;
   final TextEditingController controller;
   final String hintText;
   const SearchBox({
     Key? key,
+    required this.callback,
     required this.controller,
     this.hintText = "",
   }) : super(key: key);
@@ -15,6 +17,7 @@ class SearchBox extends StatelessWidget {
       borderRadius: BorderRadius.circular(7),
       elevation: 1,
       child: TextFormField(
+        onFieldSubmitted: callback,
         controller: controller,
         cursorColor: Colors.black38,
         cursorHeight: 20,

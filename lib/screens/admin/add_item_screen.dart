@@ -42,8 +42,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
           price: double.parse(_priceController.text),
           quantity: int.parse(_quantityController.text),
           image: image!);
-    } else {
-      showSnackBar(context, "Something went wrong");
+    } else if (image == null) {
+      showSnackBar(context, "Select an image to add item");
     }
   }
 

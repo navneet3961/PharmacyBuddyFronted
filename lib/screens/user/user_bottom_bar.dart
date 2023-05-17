@@ -15,7 +15,7 @@ class UserBottomBar extends StatefulWidget {
 }
 
 class _UserBottomBarState extends State<UserBottomBar> {
-  int _page = BarItem.profile.index;
+  int _page = BarItem.home.index;
 
   List<Widget> pages = [
     const HomeScreen(),

@@ -14,7 +14,7 @@ class PostsScreen extends StatefulWidget {
 }
 
 class _PostsScreenState extends State<PostsScreen> {
-  final AdminService adminService = AdminService();
+  final AdminService _adminService = AdminService();
   List<Item>? itemList;
 
   void navigateToAddItemScreen() {
@@ -25,25 +25,21 @@ class _PostsScreenState extends State<PostsScreen> {
   }
 
   void navigateToUpdateItemScreen(Item item) {
-    Navigator.of(context).pop(false);
-    Navigator.push(
+    Navigator.popAndPushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => UpdateItemScreen(
-          item: item,
-        ),
-      ),
+      UpdateItemScreen.routeName,
+      arguments: item,
     );
   }
 
   @override
   void initState() {
-    super.initState();
     fetchAllItems();
+    super.initState();
   }
 
   void fetchAllItems() async {
-    itemList = await adminService.fetchAllItems(context: context);
+    itemList = await _adminService.fetchAllItems(context: context);
     setState(() {});
   }
 
@@ -110,7 +106,7 @@ class _PostsScreenState extends State<PostsScreen> {
                     onDismissed: (direction) {
                       // DELETE
                       if (direction == DismissDirection.endToStart) {
-                        adminService.deleteItem(
+                        _adminService.deleteItem(
                             context: context, id: itemList![idx].id);
 
                         itemList!.removeAt(idx);
@@ -121,7 +117,9 @@ class _PostsScreenState extends State<PostsScreen> {
                     key: Key(itemList![idx].id),
                     child: GestureDetector(
                       onDoubleTap: () {
-                        showDescription(context, itemList![idx].description);
+                        Item item = itemList![idx];
+                        showDescription(
+                            context, item.name, item.price, item.description);
                       },
                       child: Container(
                         height: 150,
@@ -139,6 +137,8 @@ class _PostsScreenState extends State<PostsScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   CustomText(
@@ -169,13 +169,54 @@ class _PostsScreenState extends State<PostsScreen> {
     );
   }
 
-  Future<dynamic> showDescription(BuildContext context, String description) {
+  Future<dynamic> showDescription(
+    BuildContext context,
+    String name,
+    double price,
+    String description,
+  ) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Description"),
-          content: Text(description),
+          title: const Text("About"),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CustomText(
+                      str: "Name: ",
+                      weight: FontWeight.bold,
+                    ),
+                    Flexible(child: CustomText(str: name))
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    const CustomText(
+                      str: "Price: ",
+                      weight: FontWeight.bold,
+                    ),
+                    CustomText(str: "₹ ${price.toString()}")
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CustomText(
+                      str: "Description: ",
+                      weight: FontWeight.bold,
+                    ),
+                    Flexible(child: CustomText(str: description))
+                  ],
+                ),
+              ],
+            ),
+          ),
           actions: <Widget>[
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(false),

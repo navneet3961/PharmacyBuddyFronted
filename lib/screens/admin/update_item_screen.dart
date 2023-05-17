@@ -7,9 +7,9 @@ import 'package:pharmacy_buddy/utils/constants.dart';
 import 'package:pharmacy_buddy/utils/snackbar.dart';
 
 class UpdateItemScreen extends StatefulWidget {
-  final Item? item;
+  final Item item;
   static const String routeName = '/update-item-screen';
-  const UpdateItemScreen({super.key, this.item});
+  const UpdateItemScreen({super.key, required this.item});
 
   @override
   State<UpdateItemScreen> createState() => _UpdateItemScreenState();
@@ -27,12 +27,13 @@ class _UpdateItemScreenState extends State<UpdateItemScreen> {
 
   @override
   void initState() {
-    _id = super.widget.item!.id;
-    _imageUrl = super.widget.item!.imageUrl;
-    _nameController.text = super.widget.item!.name;
-    _descriptionController.text = super.widget.item!.description;
-    _priceController.text = super.widget.item!.price.toString();
-    _quantityController.text = super.widget.item!.quantity.toString();
+    Item item = widget.item;
+    _id = item.id;
+    _imageUrl = item.imageUrl;
+    _nameController.text = item.name;
+    _descriptionController.text = item.description;
+    _priceController.text = item.price.toString();
+    _quantityController.text = item.quantity.toString();
     super.initState();
   }
 

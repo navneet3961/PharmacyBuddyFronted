@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pharmacy_buddy/models/item.dart';
 import 'package:pharmacy_buddy/screens/admin/add_item_screen.dart';
 import 'package:pharmacy_buddy/screens/admin/update_item_screen.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
 import 'package:pharmacy_buddy/screens/home_screen.dart';
 import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
+import 'package:pharmacy_buddy/screens/search_screen.dart';
 import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -24,8 +26,21 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => const AddItemScreen());
     case UpdateItemScreen.routeName:
+      Item item = routeSettings.arguments as Item;
       return MaterialPageRoute(
-          settings: routeSettings, builder: (_) => const UpdateItemScreen());
+        settings: routeSettings,
+        builder: (_) => UpdateItemScreen(
+          item: item,
+        ),
+      );
+    case SearchScreen.routeName:
+      String keyword = routeSettings.arguments as String;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => SearchScreen(
+          keyword: keyword,
+        ),
+      );
     default:
       return MaterialPageRoute(
         settings: routeSettings,

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
 import 'package:pharmacy_buddy/models/item.dart';
-import 'package:pharmacy_buddy/screens/search_screen.dart';
 import 'package:pharmacy_buddy/screens/widgets/search_box.dart';
 import 'package:pharmacy_buddy/services/user_service.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String routeName = '/home-screen';
-  const HomeScreen({super.key});
+class SearchScreen extends StatefulWidget {
+  final String keyword;
+  static const String routeName = '/search-screen';
+  const SearchScreen({super.key, required this.keyword});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Item>? itemList;
   final UserService _userService = UserService();
@@ -22,16 +22,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchAllItems();
+    _searchController.text = widget.keyword;
+    fetchAllItems(widget.keyword);
   }
 
-  void fetchAllItems() async {
-    itemList = await _userService.fetchAllItems(context: context, keyword: "");
+  void fetchAllItems(String keyword) async {
+    itemList =
+        await _userService.fetchAllItems(context: context, keyword: keyword);
     setState(() {});
   }
 
   void navigateToSearchScreen(String keyword) {
-    Navigator.pushNamed(context, SearchScreen.routeName, arguments: keyword);
+    Navigator.popAndPushNamed(context, SearchScreen.routeName,
+        arguments: keyword);
   }
 
   @override
