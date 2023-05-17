@@ -67,55 +67,58 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: itemList == null
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: itemList!.length,
-              itemBuilder: (context, idx) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onDoubleTap: () {
-                      Item item = itemList![idx];
-                      showDescription(
-                          context, item.name, item.price, item.description);
-                    },
-                    child: Container(
-                      height: 150,
-                      padding: const EdgeInsets.all(8),
-                      color: GlobalVariables.greyBackgroundColor,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            itemList![idx].imageUrl,
-                            width: MediaQuery.of(context).size.width / 2,
-                            height: 150,
-                            fit: BoxFit.cover,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomText(
-                                  str: itemList![idx].name,
-                                  weight: FontWeight.bold,
+          : itemList!.isEmpty
+              ? const Center(child: Text("No items found"))
+              : ListView.builder(
+                  itemCount: itemList!.length,
+                  itemBuilder: (context, idx) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onDoubleTap: () {
+                          Item item = itemList![idx];
+                          showDescription(
+                              context, item.name, item.price, item.description);
+                        },
+                        child: Container(
+                          height: 150,
+                          padding: const EdgeInsets.all(8),
+                          color: GlobalVariables.greyBackgroundColor,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.network(
+                                itemList![idx].imageUrl,
+                                width: MediaQuery.of(context).size.width / 2,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                      str: itemList![idx].name,
+                                      weight: FontWeight.bold,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    CustomText(
+                                      str: "₹ ${itemList![idx].price}",
+                                      weight: FontWeight.bold,
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 8),
-                                CustomText(
-                                  str: "₹ ${itemList![idx].price}",
-                                  weight: FontWeight.bold,
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
     );
   }
 
