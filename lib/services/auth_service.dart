@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:pharmacy_buddy/models/user.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
 import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
@@ -22,9 +23,11 @@ class AuthService {
     required String password,
   }) async {
     try {
+      User user = User.signUp(name: name, email: email, password: password);
+
       http.Response res = await http.post(
         Uri.parse('$uri/api/v1/user/signup'),
-        body: jsonEncode({"name": name, "email": email, "password": password}),
+        body: user.toJson(),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -48,9 +51,11 @@ class AuthService {
     required String password,
   }) async {
     try {
+      User user = User.signIn(email: email, password: password);
+
       http.Response res = await http.post(
         Uri.parse('$uri/api/v1/user/signin'),
-        body: jsonEncode({"email": email, "password": password}),
+        body: user.toJson(),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -63,16 +68,15 @@ class AuthService {
           showSnackBar(context, "Sign-In successful!");
           final String token = res.headers["x-access-token"]!;
 
-          await PrefService.createCache(token);
-
           Provider.of<UserProvider>(context, listen: false).setUser(res.body);
 
-          bool isAdmin =
-              Provider.of<UserProvider>(context, listen: false).user.isAdmin;
+          User user = Provider.of<UserProvider>(context, listen: false).user;
+
+          await PrefService.createCache(token, user.cart);
 
           Navigator.pushNamedAndRemoveUntil(
             context,
-            isAdmin ? AdminScreen.routeName : UserBottomBar.routeName,
+            user.isAdmin ? AdminScreen.routeName : UserBottomBar.routeName,
             (route) => false,
           );
         },
@@ -89,7 +93,7 @@ class AuthService {
       String? token = await PrefService.getCache();
 
       if (token == null) {
-        await PrefService.createCache('');
+        await PrefService.createCache('', '');
         token = '';
       }
 

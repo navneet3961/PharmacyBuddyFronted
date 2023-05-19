@@ -42,7 +42,7 @@ class AdminService {
       String? token = await PrefService.getCache();
 
       if (token == null) {
-        await PrefService.createCache('');
+        await PrefService.createCache('', '');
         token = '';
       }
 
@@ -91,7 +91,7 @@ class AdminService {
       String? token = await PrefService.getCache();
 
       if (token == null) {
-        await PrefService.createCache('');
+        await PrefService.createCache('', '');
         token = '';
       }
 
@@ -124,37 +124,37 @@ class AdminService {
   }) async {
     List<Item> itemList = [];
 
-    try {
-      String? token = await PrefService.getCache();
+    // try {
+    String? token = await PrefService.getCache();
 
-      if (token == null) {
-        await PrefService.createCache('');
-        token = '';
-      }
-
-      http.Response res = await http.get(
-        Uri.parse('$uri/api/v1/item/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-      );
-
-      // ignore: use_build_context_synchronously
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          var data = jsonDecode(res.body)["data"];
-
-          for (int i = 0; i < data.length; i++) {
-            itemList.add((Item.fromJson(jsonEncode(data[i]))));
-          }
-        },
-      );
-    } catch (e) {
-      showSnackBar(context, e.toString());
+    if (token == null) {
+      await PrefService.createCache('', '');
+      token = '';
     }
+
+    http.Response res = await http.get(
+      Uri.parse('$uri/api/v1/item/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+    );
+
+    // ignore: use_build_context_synchronously
+    httpErrorHandle(
+      response: res,
+      context: context,
+      onSuccess: () {
+        var data = jsonDecode(res.body)["data"];
+
+        for (int i = 0; i < data.length; i++) {
+          itemList.add((Item.fromJson(jsonEncode(data[i]))));
+        }
+      },
+    );
+    // } catch (e) {
+    //   showSnackBar(context, e.toString());
+    // }
 
     return itemList;
   }
@@ -167,7 +167,7 @@ class AdminService {
       String? token = await PrefService.getCache();
 
       if (token == null) {
-        await PrefService.createCache('');
+        await PrefService.createCache('', '');
         token = '';
       }
 

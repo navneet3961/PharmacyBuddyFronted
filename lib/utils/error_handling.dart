@@ -9,6 +9,11 @@ void httpErrorHandle({
   required VoidCallback onSuccess,
 }) {
   final dynamic res = jsonDecode(response.body);
+
+  if (res["message"].runtimeType.toString() == "_JsonMap") {
+    res["message"] = "Invalid data sent in the request";
+  }
+
   switch (response.statusCode) {
     case 200:
     case 201:

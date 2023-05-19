@@ -3,9 +3,10 @@ import 'package:pharmacy_buddy/models/item.dart';
 import 'package:pharmacy_buddy/screens/admin/add_item_screen.dart';
 import 'package:pharmacy_buddy/screens/admin/update_item_screen.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
-import 'package:pharmacy_buddy/screens/home_screen.dart';
+import 'package:pharmacy_buddy/screens/user/cart_screen.dart';
+import 'package:pharmacy_buddy/screens/user/home_screen.dart';
 import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
-import 'package:pharmacy_buddy/screens/search_screen.dart';
+import 'package:pharmacy_buddy/screens/user/search_screen.dart';
 import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -17,8 +18,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => const HomeScreen());
     case UserBottomBar.routeName:
-      return MaterialPageRoute(
-          settings: routeSettings, builder: (_) => const UserBottomBar());
+      if (routeSettings.arguments == null) {
+        return MaterialPageRoute(
+            settings: routeSettings, builder: (_) => const UserBottomBar());
+      } else {
+        int page = routeSettings.arguments as int;
+        return MaterialPageRoute(
+            settings: routeSettings, builder: (_) => UserBottomBar(page: page));
+      }
     case AdminScreen.routeName:
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => const AdminScreen());
@@ -41,6 +48,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           keyword: keyword,
         ),
       );
+    case CartScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => const CartScreen());
     default:
       return MaterialPageRoute(
         settings: routeSettings,

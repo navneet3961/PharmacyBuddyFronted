@@ -41,7 +41,7 @@ class Item {
       id: map['_id'],
       name: map['name'],
       description: map['description'],
-      price: map['price'],
+      price: double.parse(map['price'].toString()),
       quantity: map['quantity'],
       imageUrl: map['imageUrl'],
     );
@@ -54,4 +54,13 @@ class Item {
   // Here added ["data"] because all the data about the user is in data key
   factory Item.fromJsonData(String source) =>
       Item.fromMap(json.decode(source)["data"]);
+
+  // Here added ["data"]["listOfItems"] because the list of items is in the data key of the user
+  factory Item.fromJsonDataList(String source) =>
+      Item.fromMap(json.decode(source)["data"]["listOfItems"]);
+
+  @override
+  String toString() {
+    return 'Item(id: $id, name: $name, description: $description, price: $price, quantity: $quantity, imageUrl: $imageUrl)';
+  }
 }

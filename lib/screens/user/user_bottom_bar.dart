@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pharmacy_buddy/screens/account_screen.dart';
-import 'package:pharmacy_buddy/screens/home_screen.dart';
+import 'package:pharmacy_buddy/screens/user/account_screen.dart';
+import 'package:pharmacy_buddy/screens/user/cart_screen.dart';
+import 'package:pharmacy_buddy/screens/user/home_screen.dart';
 import 'package:pharmacy_buddy/common-widgets/bottom_bar_item.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 
@@ -8,22 +9,27 @@ enum BarItem { home, profile, cart }
 
 class UserBottomBar extends StatefulWidget {
   static const String routeName = '/user-bottomBar-screen';
-  const UserBottomBar({super.key});
+  final int page;
+  const UserBottomBar({super.key, this.page = 0});
 
   @override
   State<UserBottomBar> createState() => _UserBottomBarState();
 }
 
 class _UserBottomBarState extends State<UserBottomBar> {
-  int _page = BarItem.home.index;
+  late int _page;
 
   List<Widget> pages = [
     const HomeScreen(),
     const AccountScreen(),
-    const Center(
-      child: Text("Cart Page"),
-    ),
+    const CartScreen(),
   ];
+
+  @override
+  void initState() {
+    _page = widget.page;
+    super.initState();
+  }
 
   void updatePages(int page) {
     setState(() {

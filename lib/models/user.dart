@@ -5,18 +5,19 @@ class User {
   final String name;
   final String email;
   final String password;
+  final String cart;
   // final List<Address> address = [];
   final bool isBlocked;
   final bool isAdmin;
-  // final String token;
+
   User({
     this.id = '',
     required this.name,
     required this.email,
     required this.password,
+    this.cart = '',
     this.isBlocked = false,
     this.isAdmin = false,
-    // this.token = "",
   });
 
   User.empty({
@@ -24,9 +25,29 @@ class User {
     this.name = '',
     this.email = '',
     this.password = '',
+    this.cart = '',
     this.isBlocked = true,
     this.isAdmin = false,
-    // this.token = "",
+  });
+
+  User.signUp({
+    this.id = '',
+    required this.name,
+    required this.email,
+    required this.password,
+    this.cart = '',
+    this.isBlocked = false,
+    this.isAdmin = false,
+  });
+
+  User.signIn({
+    this.id = '',
+    this.name = '',
+    required this.email,
+    required this.password,
+    this.cart = '',
+    this.isBlocked = false,
+    this.isAdmin = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,10 +56,10 @@ class User {
       'name': name,
       'email': email,
       'password': password,
+      'cart': cart,
       // 'address': address,
       'isBlocked': isBlocked,
       'isAdmin': isAdmin,
-      // 'token': token,
     };
   }
 
@@ -48,9 +69,9 @@ class User {
       name: map['name'],
       email: map['email'],
       password: map['password'],
+      cart: map['cart'],
       isBlocked: map['isBlocked'],
       isAdmin: map['isAdmin'],
-      // token: map['token'],
     );
   }
 
@@ -65,6 +86,6 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email, password: $password, isBlocked: $isBlocked, isAdmin: $isAdmin)';
+    return 'User(id: $id, name: $name, email: $email, password: $password, cart: $cart, isBlocked: $isBlocked, isAdmin: $isAdmin)';
   }
 }
