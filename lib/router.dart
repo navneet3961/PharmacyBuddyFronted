@@ -3,7 +3,9 @@ import 'package:pharmacy_buddy/models/item.dart';
 import 'package:pharmacy_buddy/screens/admin/add_item_screen.dart';
 import 'package:pharmacy_buddy/screens/admin/update_item_screen.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
+import 'package:pharmacy_buddy/screens/user/address_screen.dart';
 import 'package:pharmacy_buddy/screens/user/cart_screen.dart';
+import 'package:pharmacy_buddy/screens/user/confirm_order_screen.dart';
 import 'package:pharmacy_buddy/screens/user/home_screen.dart';
 import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
 import 'package:pharmacy_buddy/screens/user/search_screen.dart';
@@ -51,6 +53,17 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case CartScreen.routeName:
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => const CartScreen());
+    case AddressScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => const AddressScreen());
+    case ConfirmOrderScreen.routeName:
+      String address = routeSettings.arguments as String;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => ConfirmOrderScreen(
+          address: address,
+        ),
+      );
     default:
       return MaterialPageRoute(
         settings: routeSettings,

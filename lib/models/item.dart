@@ -61,6 +61,6 @@ class Item {
 
   @override
   String toString() {
-    return 'Item(id: $id, name: $name, description: $description, price: $price, quantity: $quantity, imageUrl: $imageUrl)';
+    return '$name (₹$price, Qty: $quantity)';
   }
 }

@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
 import 'package:pharmacy_buddy/models/item.dart';
 import 'package:pharmacy_buddy/models/user.dart';
+import 'package:pharmacy_buddy/screens/user/address_screen.dart';
 import 'package:pharmacy_buddy/screens/user/search_screen.dart';
 import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 import 'package:pharmacy_buddy/screens/widgets/search_box.dart';
-import 'package:pharmacy_buddy/services/shared_preferences.dart';
 import 'package:pharmacy_buddy/services/user_service.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 import 'package:provider/provider.dart';
-
 import '../../providers/user_provider.dart';
 
 class CartScreen extends StatefulWidget {
@@ -33,10 +32,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void fetchAllItems() async {
-    String? cartId = await PrefService.getCartId();
-    itemList =
-        // ignore: use_build_context_synchronously
-        await _userService.getCartItems(context: context, cartId: cartId!);
+    itemList = await _userService.getCartItems(context: context);
 
     for (int idx = 0; idx < itemList!.length; idx++) {
       totalCost += itemList![idx].price * itemList![idx].quantity;
@@ -45,7 +41,12 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void navigateToSearchScreen(String keyword) {
-    Navigator.pushNamed(context, SearchScreen.routeName, arguments: keyword);
+    Navigator.popAndPushNamed(context, SearchScreen.routeName,
+        arguments: keyword);
+  }
+
+  void navigateToAddressScreen() {
+    Navigator.pushNamed(context, AddressScreen.routeName);
   }
 
   @override
@@ -98,25 +99,24 @@ class _CartScreenState extends State<CartScreen> {
               : Column(
                   children: [
                     Container(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            const CustomText(
-                              str: "Subtotal: ",
-                              weight: FontWeight.bold,
-                              size: 20,
-                            ),
-                            CustomText(
-                              str: "₹ ${totalCost.toString()}",
-                              weight: FontWeight.w300,
-                              size: 20,
-                            )
-                          ],
-                        )),
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          const CustomText(
+                            str: "Subtotal: ",
+                            weight: FontWeight.w300,
+                            size: 20,
+                          ),
+                          CustomText(
+                            str: "₹ ${totalCost.toStringAsFixed(2)}",
+                            weight: FontWeight.bold,
+                            size: 20,
+                          )
+                        ],
+                      ),
+                    ),
                     Expanded(
                       child: ListView.builder(
-                        // scrollDirection: Axis.vertical,
-                        // physics: const ScrollPhysics(),
                         itemCount: itemList!.length,
                         itemBuilder: (context, idx) {
                           return Padding(
@@ -131,9 +131,9 @@ class _CartScreenState extends State<CartScreen> {
       floatingActionButton: Visibility(
         visible: itemList == null || itemList!.isNotEmpty,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: navigateToAddressScreen,
           tooltip: "Place Order",
-          child: Icon(Icons.shopping_bag_outlined),
+          child: const Icon(Icons.shopping_bag_outlined),
         ),
       ),
     );
@@ -150,8 +150,8 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onDoubleTap: () {
+    return InkWell(
+      onTap: () {
         Item item = this.item;
         showAbout(context, item);
       },
@@ -175,14 +175,85 @@ class ItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(
-                    str: "${item.name} (Qty: ${item.quantity})",
+                    str: item.name,
                     weight: FontWeight.bold,
                   ),
                   const SizedBox(height: 8),
                   CustomText(
-                    str: "₹ ${item.price}",
+                    str: "₹${item.price}",
                     weight: FontWeight.bold,
+                    size: 18,
                   ),
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Colors.black12, width: 1.5),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 35,
+                              height: 32,
+                              alignment: Alignment.center,
+                              child: InkWell(
+                                onTap: () {
+                                  final UserService userService = UserService();
+                                  bool remove = false;
+
+                                  if (item.quantity == 1) {
+                                    remove = true;
+                                  }
+
+                                  userService.removeItemFromCart(
+                                      context: context,
+                                      itemId: item.id,
+                                      remove: remove);
+                                },
+                                child: const Icon(
+                                  Icons.remove,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 35,
+                              height: 32,
+                              alignment: Alignment.center,
+                              color: Colors.white,
+                              child: CustomText(
+                                str: item.quantity.toString(),
+                                size: 18,
+                              ),
+                            ),
+                            Container(
+                              width: 35,
+                              height: 32,
+                              alignment: Alignment.center,
+                              child: InkWell(
+                                onTap: () {
+                                  final UserService userService = UserService();
+
+                                  userService.addItemToCart(
+                                      context: context, itemId: item.id);
+
+                                  Navigator.popAndPushNamed(
+                                      context, UserBottomBar.routeName,
+                                      arguments: 2);
+                                },
+                                child: const Icon(
+                                  Icons.add,
+                                  size: 18,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             )
@@ -226,7 +297,7 @@ Future<dynamic> showAbout(
                     str: "Price: ",
                     weight: FontWeight.bold,
                   ),
-                  CustomText(str: "₹ ${item.price.toString()}")
+                  CustomText(str: "₹${item.price.toString()}")
                 ],
               ),
               const SizedBox(height: 12),
@@ -255,9 +326,7 @@ Future<dynamic> showAbout(
                   onPressed: () {
                     Navigator.of(context).pop(false);
                     (userService.removeItemFromCart(
-                        context: context, cartId: user.cart, itemId: item.id));
-                    Navigator.popAndPushNamed(context, UserBottomBar.routeName,
-                        arguments: 2);
+                        context: context, itemId: item.id, remove: true));
                   },
                   child: const Text("Remove from Cart"),
                 )

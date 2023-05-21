@@ -39,7 +39,7 @@ Future<dynamic> showAbout(
                     str: "Price: ",
                     weight: FontWeight.bold,
                   ),
-                  CustomText(str: "₹ ${item.price.toString()}")
+                  CustomText(str: "₹${item.price.toString()}")
                 ],
               ),
               const SizedBox(height: 12),
@@ -57,7 +57,7 @@ Future<dynamic> showAbout(
               ? ElevatedButton(
                   onPressed: () {
                     (userService.addItemToCart(
-                        context: context, cartId: user.cart, itemId: item.id));
+                        context: context, itemId: item.id));
                     Navigator.of(context).pop(false);
                   },
                   child: const Text("Add to Cart"),

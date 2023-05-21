@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 
-BottomNavigationBarItem barItems(int page, int idx, IconData icon) {
+BottomNavigationBarItem barItems(
+    int page, int idx, IconData icon, String tooltip) {
   return BottomNavigationBarItem(
+    tooltip: tooltip,
     icon: Container(
       width: 42,
       decoration: BoxDecoration(

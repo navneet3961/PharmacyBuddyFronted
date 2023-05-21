@@ -49,9 +49,11 @@ class _UserBottomBarState extends State<UserBottomBar> {
         iconSize: 28,
         onTap: updatePages,
         items: [
-          barItems(_page, BarItem.home.index, Icons.home_outlined),
-          barItems(_page, BarItem.profile.index, Icons.person_outlined),
-          barItems(_page, BarItem.cart.index, Icons.shopping_cart_outlined),
+          barItems(_page, BarItem.home.index, Icons.home_outlined, "Home Page"),
+          barItems(_page, BarItem.profile.index, Icons.person_outlined,
+              "Profile Page"),
+          barItems(_page, BarItem.cart.index, Icons.shopping_cart_outlined,
+              "Cart Page"),
         ],
       ),
     );

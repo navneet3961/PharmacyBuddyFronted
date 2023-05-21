@@ -1,12 +1,14 @@
 import 'dart:convert';
 
+import 'package:pharmacy_buddy/models/address.dart';
+
 class User {
   final String id;
   final String name;
   final String email;
   final String password;
   final String cart;
-  // final List<Address> address = [];
+  final List<Address> addresses;
   final bool isBlocked;
   final bool isAdmin;
 
@@ -16,6 +18,7 @@ class User {
     required this.email,
     required this.password,
     this.cart = '',
+    this.addresses = const [],
     this.isBlocked = false,
     this.isAdmin = false,
   });
@@ -26,6 +29,7 @@ class User {
     this.email = '',
     this.password = '',
     this.cart = '',
+    this.addresses = const [],
     this.isBlocked = true,
     this.isAdmin = false,
   });
@@ -36,6 +40,7 @@ class User {
     required this.email,
     required this.password,
     this.cart = '',
+    this.addresses = const [],
     this.isBlocked = false,
     this.isAdmin = false,
   });
@@ -46,6 +51,7 @@ class User {
     required this.email,
     required this.password,
     this.cart = '',
+    this.addresses = const [],
     this.isBlocked = false,
     this.isAdmin = false,
   });
@@ -57,19 +63,25 @@ class User {
       'email': email,
       'password': password,
       'cart': cart,
-      // 'address': address,
+      'addresses': addresses,
       'isBlocked': isBlocked,
       'isAdmin': isAdmin,
     };
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
+    List<Address> list = [];
+    for (int i = 0; i < map['addresses'].length; i++) {
+      list.add(Address.fromJson(jsonEncode(map['addresses'][i])));
+    }
+
     return User(
       id: map['_id'],
       name: map['name'],
       email: map['email'],
       password: map['password'],
       cart: map['cart'],
+      addresses: list,
       isBlocked: map['isBlocked'],
       isAdmin: map['isAdmin'],
     );
@@ -86,6 +98,6 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email, password: $password, cart: $cart, isBlocked: $isBlocked, isAdmin: $isAdmin)';
+    return 'User(id: $id, name: $name, email: $email, password: $password, cart: $cart, addresses: $addresses, isBlocked: $isBlocked, isAdmin: $isAdmin)';
   }
 }

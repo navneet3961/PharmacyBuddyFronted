@@ -104,9 +104,12 @@ class _AdminScreenState extends State<AdminScreen> {
         iconSize: 28,
         onTap: updatePages,
         items: [
-          barItems(_page, BarItem.posts.index, Icons.home_outlined),
-          barItems(_page, BarItem.analytics.index, Icons.analytics_outlined),
-          barItems(_page, BarItem.inbox.index, Icons.all_inbox_outlined),
+          barItems(
+              _page, BarItem.posts.index, Icons.home_outlined, "Home Page"),
+          barItems(_page, BarItem.analytics.index, Icons.analytics_outlined,
+              "Analytics Page"),
+          barItems(_page, BarItem.inbox.index, Icons.all_inbox_outlined,
+              "Inbox Page"),
         ],
       ),
     );

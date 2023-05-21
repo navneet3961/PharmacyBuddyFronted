@@ -14,8 +14,8 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onDoubleTap: () {
+    return InkWell(
+      onTap: () {
         Item item = this.item;
         showAbout(context, item);
       },
@@ -44,8 +44,9 @@ class ItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   CustomText(
-                    str: "₹ ${item.price}",
+                    str: "₹${item.price}",
                     weight: FontWeight.bold,
+                    size: 18,
                   ),
                 ],
               ),
