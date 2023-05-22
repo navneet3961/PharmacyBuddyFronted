@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text_form_field.dart';
 import 'package:pharmacy_buddy/models/address.dart';
-import 'package:pharmacy_buddy/models/user.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/screens/user/confirm_order_screen.dart';
 import 'package:pharmacy_buddy/services/user_service.dart';

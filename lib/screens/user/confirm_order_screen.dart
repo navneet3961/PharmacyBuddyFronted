@@ -81,28 +81,26 @@ class _ConfirmOrderScreenState extends State<ConfirmOrderScreen> {
                       trailing: "",
                     ),
                     const SizedBox(height: 12),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const CustomText(
-                            str: "Items:",
-                            weight: FontWeight.w700,
-                          ),
-                          for (int i = 0; i < itemList!.length; i++) ...[
-                            DisplayListTIle(
-                              leading: (i + 1).toString(),
-                              title: itemList![i].toString(),
-                              trailing:
-                                  "₹${(itemList![i].price * itemList![i].quantity).toStringAsFixed(2)}",
-                            ),
-                          ],
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CustomText(
+                          str: "Items:",
+                          weight: FontWeight.w700,
+                        ),
+                        for (int i = 0; i < itemList!.length; i++) ...[
                           DisplayListTIle(
-                            leading: "Total Cost",
-                            trailing: "₹${totalCost.toStringAsFixed(2)}",
+                            leading: (i + 1).toString(),
+                            title: itemList![i].toString(),
+                            trailing:
+                                "₹${(itemList![i].price * itemList![i].quantity).toStringAsFixed(2)}",
                           ),
                         ],
-                      ),
+                        DisplayListTIle(
+                          leading: "Total Cost",
+                          trailing: "₹${totalCost.toStringAsFixed(2)}",
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     Form(
@@ -166,7 +164,7 @@ class DisplayListTIle extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
       leading: CustomText(
-        str: "$leading",
+        str: leading,
         weight: FontWeight.w700,
       ),
       title: CustomText(str: title),

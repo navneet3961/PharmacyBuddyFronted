@@ -115,4 +115,54 @@ class AuthService {
       showSnackBar(context, error.toString());
     }
   }
+
+  void updateUser({
+    required BuildContext context,
+    required String userId,
+    String name = "",
+    String email = "",
+    String password = "",
+  }) async {
+    try {
+      String? token = await PrefService.getCache();
+
+      if (token == null) {
+        await PrefService.createCache('', '');
+        token = '';
+      }
+
+      http.Response res = await http.patch(
+        Uri.parse('$uri/api/v1/user/$userId'),
+        body: jsonEncode({"name": name, "email": email, "password": password}),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () async {
+          showSnackBar(context, "Update successfully!");
+
+          Provider.of<UserProvider>(context, listen: false).setUser(res.body);
+          User user = Provider.of<UserProvider>(context, listen: false).user;
+
+          if (password.isEmpty) {
+            final String token = res.headers["x-access-token"]!;
+            await PrefService.createCache(token, user.cart);
+          }
+
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            UserBottomBar.routeName,
+            (route) => false,
+          );
+        },
+      );
+    } catch (error) {
+      showSnackBar(context, error.toString());
+    }
+  }
 }

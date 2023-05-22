@@ -53,7 +53,7 @@ Future<dynamic> showAbout(
           ),
         ),
         actions: <Widget>[
-          !user.isAdmin
+          !user.isAdmin && item.quantity > 0
               ? ElevatedButton(
                   onPressed: () {
                     (userService.addItemToCart(

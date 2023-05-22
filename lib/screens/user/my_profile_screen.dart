@@ -2,46 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_password_text_form_field.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text_form_field.dart';
+import 'package:pharmacy_buddy/models/user.dart';
 import 'package:pharmacy_buddy/services/auth_service.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 import 'package:pharmacy_buddy/utils/snackbar.dart';
+import 'package:provider/provider.dart';
 
-enum Auth { signIn, signUp }
+import '../../providers/user_provider.dart';
 
-class AuthScreen extends StatefulWidget {
-  static const String routeName = '/auth-screen';
-  const AuthScreen({super.key});
+enum Profile { details, password }
+
+class MyProfileScreen extends StatefulWidget {
+  static const String routeName = '/my-profile-screen';
+  const MyProfileScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<MyProfileScreen> createState() => _MyProfileScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
-  Auth _auth = Auth.signIn;
-  final _signUpFormKey = GlobalKey<FormState>();
-  final _signInFormKey = GlobalKey<FormState>();
+class _MyProfileScreenState extends State<MyProfileScreen> {
+  Profile _profile = Profile.details;
+  final _detailsFormKey = GlobalKey<FormState>();
+  final _passwordFormKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  final AuthService auth = AuthService();
+  User user = User.empty();
+  final AuthService _auth = AuthService();
 
-  void singUpUser() {
-    auth.signUpUser(
-      context: context,
-      name: _nameController.text,
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
   }
 
-  void singInUser() {
-    auth.signInUser(
-      context: context,
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
+  void fetchUserData() {
+    user = Provider.of<UserProvider>(context, listen: false).user;
+
+    _nameController.text = user.name;
+    _emailController.text = user.email;
+
+    setState(() {});
   }
 
   @override
@@ -53,9 +56,36 @@ class _AuthScreenState extends State<AuthScreen> {
     super.dispose();
   }
 
+  void updateUserInDatabase(String name, String email, String password) {
+    _auth.updateUser(
+      context: context,
+      userId: user.id,
+      name: name,
+      email: email,
+      password: password,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: GlobalVariables.appBarGradient,
+            ),
+          ),
+          title: const CustomText(
+            str: "My Profile",
+            size: 24,
+            weight: FontWeight.w400,
+          ),
+        ),
+      ),
       backgroundColor: GlobalVariables.greyBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -63,49 +93,44 @@ class _AuthScreenState extends State<AuthScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                const CustomText(
-                  str: "Welcome",
-                  size: 30,
-                  weight: FontWeight.w600,
-                ),
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: RadioListTile(
-                        tileColor: _auth == Auth.signUp
+                        tileColor: _profile == Profile.details
                             ? GlobalVariables.backgroundColor
                             : GlobalVariables.greyBackgroundColor,
                         activeColor: GlobalVariables.secondaryColor,
                         title: const CustomText(
-                          str: "Create Account",
+                          str: "Update Profile",
                           weight: FontWeight.bold,
                         ),
-                        value: Auth.signUp,
-                        groupValue: _auth,
-                        onChanged: (Auth? val) {
+                        value: Profile.details,
+                        groupValue: _profile,
+                        onChanged: (Profile? val) {
                           setState(() {
-                            _auth = val!;
+                            _profile = val!;
                           });
                         },
                       ),
                     ),
                     Expanded(
                       child: RadioListTile(
-                        tileColor: _auth == Auth.signIn
+                        tileColor: _profile == Profile.password
                             ? GlobalVariables.backgroundColor
                             : GlobalVariables.greyBackgroundColor,
                         activeColor: GlobalVariables.secondaryColor,
                         title: const CustomText(
-                          str: "Sign-In",
+                          str: "Change Password",
                           weight: FontWeight.bold,
                         ),
-                        value: Auth.signIn,
-                        groupValue: _auth,
-                        onChanged: (Auth? val) {
+                        value: Profile.password,
+                        groupValue: _profile,
+                        onChanged: (Profile? val) {
                           setState(() {
-                            _auth = val!;
+                            _profile = val!;
                           });
                         },
                       ),
@@ -115,9 +140,9 @@ class _AuthScreenState extends State<AuthScreen> {
                 Container(
                   color: GlobalVariables.backgroundColor,
                   padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
-                  child: _auth == Auth.signUp
+                  child: _profile == Profile.details
                       ? Form(
-                          key: _signUpFormKey,
+                          key: _detailsFormKey,
                           child: Column(
                             children: [
                               CustomTextFormField(
@@ -130,6 +155,30 @@ class _AuthScreenState extends State<AuthScreen> {
                                 hintText: "Email",
                               ),
                               const SizedBox(height: 12),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  if (_detailsFormKey.currentState!
+                                      .validate()) {
+                                    updateUserInDatabase(_nameController.text,
+                                        _emailController.text, "");
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  minimumSize: MaterialStateProperty.all(
+                                    const Size(25, 50),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Update Profile",
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Form(
+                          key: _passwordFormKey,
+                          child: Column(
+                            children: [
                               CustomPasswordTextFormField(
                                 controller: _passwordController,
                                 hintText: "Password",
@@ -149,9 +198,10 @@ class _AuthScreenState extends State<AuthScreen> {
                                       context,
                                       "Password and Confirm Password are not same.",
                                     );
-                                  } else if (_signUpFormKey.currentState!
+                                  } else if (_passwordFormKey.currentState!
                                       .validate()) {
-                                    singUpUser();
+                                    updateUserInDatabase(
+                                        "", "", _passwordController.text);
                                   }
                                 },
                                 style: ButtonStyle(
@@ -160,39 +210,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   ),
                                 ),
                                 child: const Text(
-                                  "Sign-Up",
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : Form(
-                          key: _signInFormKey,
-                          child: Column(
-                            children: [
-                              CustomTextFormField(
-                                controller: _emailController,
-                                hintText: "Email",
-                              ),
-                              const SizedBox(height: 12),
-                              CustomPasswordTextFormField(
-                                controller: _passwordController,
-                                hintText: "Password",
-                              ),
-                              const SizedBox(height: 12),
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (_signInFormKey.currentState!.validate()) {
-                                    singInUser();
-                                  }
-                                },
-                                style: ButtonStyle(
-                                  minimumSize: MaterialStateProperty.all(
-                                    const Size(25, 50),
-                                  ),
-                                ),
-                                child: const Text(
-                                  "Sign-In",
+                                  "Change Password",
                                 ),
                               ),
                             ],
@@ -200,7 +218,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                 ),
                 const SizedBox(height: 12),
-                if (_auth == Auth.signUp) ...const [
+                if (_profile == Profile.password) ...const [
                   CustomText(str: "* Pasword must be between 8-12 digits"),
                   CustomText(str: "* Pasword must have a special character"),
                   CustomText(str: "* Pasword must have a lowercase character"),

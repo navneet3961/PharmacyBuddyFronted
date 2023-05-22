@@ -43,11 +43,30 @@ class ItemCard extends StatelessWidget {
                     weight: FontWeight.bold,
                   ),
                   const SizedBox(height: 8),
-                  CustomText(
-                    str: "₹${item.price}",
-                    weight: FontWeight.bold,
-                    size: 18,
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomText(
+                        str: "₹${item.price}",
+                        weight: FontWeight.bold,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 8),
+                      item.quantity > 0
+                          ? const CustomText(
+                              str: "In stock",
+                              weight: FontWeight.bold,
+                              size: 18,
+                              color: Colors.green,
+                            )
+                          : const CustomText(
+                              str: "Out of stock",
+                              weight: FontWeight.bold,
+                              size: 18,
+                              color: Colors.red,
+                            ),
+                    ],
+                  )
                 ],
               ),
             )

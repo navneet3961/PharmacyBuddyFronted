@@ -4,6 +4,8 @@ import 'package:pharmacy_buddy/models/item.dart';
 
 class Order {
   final String id;
+  final String details;
+  final dynamic orderedDate;
   final List<Item> items;
   final double totalCost;
   final String address;
@@ -13,6 +15,8 @@ class Order {
 
   Order({
     this.id = '',
+    this.details = '',
+    this.orderedDate = '',
     required this.items,
     required this.totalCost,
     required this.address,
@@ -24,6 +28,8 @@ class Order {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'details': details,
+      'orderedDate': orderedDate,
       'items': items,
       'totalCost': totalCost,
       'address': address,
@@ -41,6 +47,8 @@ class Order {
 
     return Order(
       id: map['_id'],
+      details: map['details'],
+      orderedDate: map['orderedDate'],
       items: list,
       totalCost: map['totalCost'],
       address: map['address'],
@@ -60,6 +68,6 @@ class Order {
 
   @override
   String toString() {
-    return 'Order(id: $id, items: $items, totalCost: $totalCost, address: $address, phone: $phone, status: $status, deliveredDate: $deliveredDate)';
+    return 'Order(id: $id, details: $details, items: $items, totalCost: $totalCost, address: $address, phone: $phone, status: $status, deliveredDate: $deliveredDate)';
   }
 }

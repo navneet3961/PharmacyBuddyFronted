@@ -163,8 +163,11 @@ class UserService {
           var listOfItems = jsonDecode(res.body)["data"]["listOfItems"];
 
           for (int i = 0; i < items.length; i++) {
+            int quantity = listOfItems[i]["quantity"];
             listOfItems[i]["quantity"] = items[i]["quantity"];
-            itemList.add((Item.fromJson(jsonEncode(listOfItems[i]))));
+            Item item = Item.fromJson(jsonEncode(listOfItems[i]));
+            item.originalQuantity = quantity;
+            itemList.add(item);
           }
         },
       );
@@ -246,15 +249,26 @@ class UserService {
       }
 
       List<String> items = [];
+      List<int> quantities = [];
+      String details = "Items:\n";
 
       for (int i = 0; i < order.items.length; i++) {
         items.add(order.items[i].id);
+        quantities.add(order.items[i].quantity);
+
+        details += "${i + 1}.\t${order.items[i].toString()}\n";
       }
+
+      details += "\nTotal Cost: ₹${order.totalCost}\n\n";
+      details += "Address:\n${order.address}\n";
+      details += "\nPhone: ${order.phone}\n";
 
       http.Response res = await http.post(
         Uri.parse('$uri/api/v1/order/'),
         body: jsonEncode({
+          "details": details.toString(),
           "items": items,
+          "quantities": quantities,
           "totalCost": order.totalCost,
           "address": order.address,
           "phone": order.phone
@@ -297,6 +311,10 @@ class UserService {
 
           response = jsonDecode(res.body);
         }
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+            context, UserBottomBar.routeName, (route) => false,
+            arguments: 2);
       }
 
       httpErrorHandle(
@@ -311,5 +329,40 @@ class UserService {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+  }
+
+  Future<Order?> fetchOrder({
+    required BuildContext context,
+    required String orderId,
+  }) async {
+    try {
+      String? token = await PrefService.getCache();
+
+      if (token == null) {
+        await PrefService.createCache('', '');
+        token = '';
+      }
+
+      http.Response res = await http.get(
+        Uri.parse('$uri/api/v1/order/$orderId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+      );
+
+      var response = jsonDecode(res.body);
+
+      if (response["status"] == true) {
+        Order order = Order.fromJsonData(res.body);
+        return order;
+      }
+
+      throw "Unable to fetch the order";
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+
+    return null;
   }
 }

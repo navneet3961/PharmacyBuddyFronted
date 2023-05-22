@@ -8,6 +8,8 @@ import 'package:pharmacy_buddy/screens/user/cart_screen.dart';
 import 'package:pharmacy_buddy/screens/user/confirm_order_screen.dart';
 import 'package:pharmacy_buddy/screens/user/home_screen.dart';
 import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
+import 'package:pharmacy_buddy/screens/user/my_order_screen.dart';
+import 'package:pharmacy_buddy/screens/user/my_profile_screen.dart';
 import 'package:pharmacy_buddy/screens/user/search_screen.dart';
 import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 
@@ -64,6 +66,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           address: address,
         ),
       );
+    case MyOrderScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => const MyOrderScreen());
+    case MyProfileScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => const MyProfileScreen());
     default:
       return MaterialPageRoute(
         settings: routeSettings,

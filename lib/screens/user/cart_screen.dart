@@ -8,6 +8,7 @@ import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 import 'package:pharmacy_buddy/screens/widgets/search_box.dart';
 import 'package:pharmacy_buddy/services/user_service.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
+import 'package:pharmacy_buddy/utils/snackbar.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
 
@@ -22,6 +23,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   final TextEditingController _searchController = TextEditingController();
   double totalCost = 0;
+  bool anyOutOfStock = false;
   List<Item>? itemList;
   final UserService _userService = UserService();
 
@@ -36,6 +38,8 @@ class _CartScreenState extends State<CartScreen> {
 
     for (int idx = 0; idx < itemList!.length; idx++) {
       totalCost += itemList![idx].price * itemList![idx].quantity;
+
+      anyOutOfStock = anyOutOfStock || (itemList![idx].originalQuantity <= 0);
     }
     setState(() {});
   }
@@ -46,7 +50,11 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void navigateToAddressScreen() {
-    Navigator.pushNamed(context, AddressScreen.routeName);
+    if (anyOutOfStock) {
+      showSnackBar(context, "Some of the items are out of stock");
+    } else {
+      Navigator.pushNamed(context, AddressScreen.routeName);
+    }
   }
 
   @override
@@ -184,76 +192,85 @@ class ItemCard extends StatelessWidget {
                     weight: FontWeight.bold,
                     size: 18,
                   ),
-                  Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Colors.black12, width: 1.5),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5))),
-                        child: Row(
+                  item.originalQuantity > 0
+                      ? Row(
                           children: [
                             Container(
-                              width: 35,
-                              height: 32,
-                              alignment: Alignment.center,
-                              child: InkWell(
-                                onTap: () {
-                                  final UserService userService = UserService();
-                                  bool remove = false;
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black12, width: 1.5),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(5))),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 35,
+                                    height: 32,
+                                    alignment: Alignment.center,
+                                    child: InkWell(
+                                      onTap: () {
+                                        final UserService userService =
+                                            UserService();
+                                        bool remove = false;
 
-                                  if (item.quantity == 1) {
-                                    remove = true;
-                                  }
+                                        if (item.quantity == 1) {
+                                          remove = true;
+                                        }
 
-                                  userService.removeItemFromCart(
-                                      context: context,
-                                      itemId: item.id,
-                                      remove: remove);
-                                },
-                                child: const Icon(
-                                  Icons.remove,
-                                  size: 18,
-                                ),
+                                        userService.removeItemFromCart(
+                                            context: context,
+                                            itemId: item.id,
+                                            remove: remove);
+                                      },
+                                      child: const Icon(
+                                        Icons.remove,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 35,
+                                    height: 32,
+                                    alignment: Alignment.center,
+                                    color: Colors.white,
+                                    child: CustomText(
+                                      str: item.quantity.toString(),
+                                      size: 18,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 35,
+                                    height: 32,
+                                    alignment: Alignment.center,
+                                    child: InkWell(
+                                      onTap: () {
+                                        final UserService userService =
+                                            UserService();
+
+                                        userService.addItemToCart(
+                                            context: context, itemId: item.id);
+
+                                        Navigator.popAndPushNamed(
+                                            context, UserBottomBar.routeName,
+                                            arguments: 2);
+                                      },
+                                      child: const Icon(
+                                        Icons.add,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                            Container(
-                              width: 35,
-                              height: 32,
-                              alignment: Alignment.center,
-                              color: Colors.white,
-                              child: CustomText(
-                                str: item.quantity.toString(),
-                                size: 18,
-                              ),
-                            ),
-                            Container(
-                              width: 35,
-                              height: 32,
-                              alignment: Alignment.center,
-                              child: InkWell(
-                                onTap: () {
-                                  final UserService userService = UserService();
-
-                                  userService.addItemToCart(
-                                      context: context, itemId: item.id);
-
-                                  Navigator.popAndPushNamed(
-                                      context, UserBottomBar.routeName,
-                                      arguments: 2);
-                                },
-                                child: const Icon(
-                                  Icons.add,
-                                  size: 18,
-                                ),
-                              ),
-                            )
                           ],
+                        )
+                      : const CustomText(
+                          str: "Out of stock",
+                          weight: FontWeight.bold,
+                          size: 18,
+                          color: Colors.red,
                         ),
-                      ),
-                    ],
-                  )
                 ],
               ),
             )

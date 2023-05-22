@@ -8,6 +8,7 @@ class User {
   final String email;
   final String password;
   final String cart;
+  final List<dynamic> orders;
   final List<Address> addresses;
   final bool isBlocked;
   final bool isAdmin;
@@ -18,6 +19,7 @@ class User {
     required this.email,
     required this.password,
     this.cart = '',
+    this.orders = const [],
     this.addresses = const [],
     this.isBlocked = false,
     this.isAdmin = false,
@@ -29,6 +31,7 @@ class User {
     this.email = '',
     this.password = '',
     this.cart = '',
+    this.orders = const [],
     this.addresses = const [],
     this.isBlocked = true,
     this.isAdmin = false,
@@ -40,6 +43,7 @@ class User {
     required this.email,
     required this.password,
     this.cart = '',
+    this.orders = const [],
     this.addresses = const [],
     this.isBlocked = false,
     this.isAdmin = false,
@@ -51,6 +55,7 @@ class User {
     required this.email,
     required this.password,
     this.cart = '',
+    this.orders = const [],
     this.addresses = const [],
     this.isBlocked = false,
     this.isAdmin = false,
@@ -62,6 +67,7 @@ class User {
       'name': name,
       'email': email,
       'password': password,
+      'orders': orders,
       'cart': cart,
       'addresses': addresses,
       'isBlocked': isBlocked,
@@ -80,6 +86,7 @@ class User {
       name: map['name'],
       email: map['email'],
       password: map['password'],
+      orders: map['orders'],
       cart: map['cart'],
       addresses: list,
       isBlocked: map['isBlocked'],
@@ -98,6 +105,6 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email, password: $password, cart: $cart, addresses: $addresses, isBlocked: $isBlocked, isAdmin: $isAdmin)';
+    return 'User(id: $id, name: $name, email: $email, password: $password, cart: $cart, orders: $orders, addresses: $addresses, isBlocked: $isBlocked, isAdmin: $isAdmin)';
   }
 }

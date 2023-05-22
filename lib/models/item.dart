@@ -6,6 +6,7 @@ class Item {
   final String description;
   final double price;
   final int quantity;
+  int originalQuantity;
   final String imageUrl;
   Item({
     this.id = "",
@@ -13,6 +14,7 @@ class Item {
     required this.description,
     required this.price,
     required this.quantity,
+    this.originalQuantity = 0,
     required this.imageUrl,
   });
 
@@ -22,6 +24,7 @@ class Item {
     this.description = "",
     this.price = 0,
     this.quantity = 0,
+    this.originalQuantity = 0,
     this.imageUrl = "",
   });
 
@@ -43,6 +46,7 @@ class Item {
       description: map['description'],
       price: double.parse(map['price'].toString()),
       quantity: map['quantity'],
+      originalQuantity: map['quantity'],
       imageUrl: map['imageUrl'],
     );
   }

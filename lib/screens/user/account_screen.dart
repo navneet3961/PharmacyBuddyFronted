@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/account_button.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
+import 'package:pharmacy_buddy/screens/user/my_order_screen.dart';
+import 'package:pharmacy_buddy/screens/user/my_profile_screen.dart';
 import 'package:pharmacy_buddy/screens/user/user_info_appbar.dart';
 import 'package:pharmacy_buddy/services/shared_preferences.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
@@ -64,12 +66,20 @@ class Buttons extends StatelessWidget {
       );
     }
 
+    void navigateToMyOrdersScreen() {
+      Navigator.pushNamed(context, MyOrderScreen.routeName);
+    }
+
+    void navigateToMyProgileScreen() {
+      Navigator.pushNamed(context, MyProfileScreen.routeName);
+    }
+
     return Column(
       children: [
         Row(
           children: [
-            AccountButton(text: "My Profile", onTap: () {}),
-            AccountButton(text: "My Orders", onTap: () {}),
+            AccountButton(text: "My Profile", onTap: navigateToMyProgileScreen),
+            AccountButton(text: "My Orders", onTap: navigateToMyOrdersScreen),
           ],
         ),
         const SizedBox(height: 10),
