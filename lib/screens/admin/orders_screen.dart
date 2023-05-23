@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
 import 'package:pharmacy_buddy/models/order.dart';
 import 'package:pharmacy_buddy/screens/widgets/order_card.dart';
-import 'package:pharmacy_buddy/services/user_service.dart';
-import 'package:pharmacy_buddy/utils/constants.dart';
-import 'package:provider/provider.dart';
-import '../../providers/user_provider.dart';
+import 'package:pharmacy_buddy/services/admin_service.dart';
 
 const List<String> status = [
+  "All",
   "Pending",
   "Shipped",
   "Delivered",
@@ -16,34 +14,27 @@ const List<String> status = [
   "Cancelled",
 ];
 
-class MyOrderScreen extends StatefulWidget {
-  static const String routeName = '/my-order-screen';
-  const MyOrderScreen({super.key});
+class OrdersScreen extends StatefulWidget {
+  static const String routeName = '/orders-screen';
+  const OrdersScreen({super.key});
 
   @override
-  State<MyOrderScreen> createState() => _MyOrderScreenState();
+  State<OrdersScreen> createState() => _OrdersScreenState();
 }
 
-class _MyOrderScreenState extends State<MyOrderScreen> {
+class _OrdersScreenState extends State<OrdersScreen> {
   List<Order>? orderList;
-  final UserService _userService = UserService();
+  int _value = 0;
+  final AdminService _adminService = AdminService();
 
   @override
   void initState() {
-    fetchUserOrderList();
+    fetchAllOrders();
     super.initState();
   }
 
-  void fetchUserOrderList() async {
-    List<dynamic> orders =
-        Provider.of<UserProvider>(context, listen: false).user.orders;
-    orderList = [];
-
-    for (int i = 0; i < orders.length; i++) {
-      var order =
-          await _userService.fetchOrder(context: context, orderId: orders[i]);
-      orderList!.add(order as Order);
-    }
+  void fetchAllOrders() async {
+    orderList = await _adminService.fetchOrders(context: context);
 
     setState(() {});
   }
@@ -53,12 +44,28 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
-        child: AppBar(
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: GlobalVariables.appBarGradient,
-            ),
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Text("Show results by status: "),
+              DropdownButton(
+                  value: _value,
+                  items: [0, 1, 2, 3, 4, 5, 6]
+                      .map((e) =>
+                          DropdownMenuItem(value: e, child: Text(status[e])))
+                      .toList(),
+                  onChanged: (value) async {
+                    _value = value!;
+                    orderList = value == 0
+                        ? await _adminService.fetchOrders(context: context)
+                        : await _adminService.fetchOrders(
+                            context: context, status: value - 1);
+
+                    setState(() {});
+                  }),
+            ],
           ),
         ),
       ),
@@ -74,7 +81,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                         size: 50,
                       ),
                       SizedBox(height: 12),
-                      CustomText(str: "You never ordered", size: 20),
+                      CustomText(str: "No orders to show", size: 20),
                     ],
                   ),
                 )

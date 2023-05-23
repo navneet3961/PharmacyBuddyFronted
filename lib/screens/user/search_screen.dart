@@ -49,7 +49,6 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
-          automaticallyImplyLeading: false,
           elevation: 0,
           flexibleSpace: Container(
             decoration: const BoxDecoration(

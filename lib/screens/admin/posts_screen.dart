@@ -14,6 +14,8 @@ class PostsScreen extends StatefulWidget {
 
 class _PostsScreenState extends State<PostsScreen> {
   final AdminService _adminService = AdminService();
+  static const List<String> _options = ["All", "Out of Stock", "In Stock"];
+  int _value = 0;
   List<Item>? itemList;
 
   void navigateToAddItemScreen() {
@@ -45,6 +47,33 @@ class _PostsScreenState extends State<PostsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Text("Show results by stock: "),
+              DropdownButton(
+                  value: _value,
+                  items: [0, 1, 2]
+                      .map((e) =>
+                          DropdownMenuItem(value: e, child: Text(_options[e])))
+                      .toList(),
+                  onChanged: (value) async {
+                    _value = value!;
+                    itemList = value == 0
+                        ? await _adminService.fetchAllItems(context: context)
+                        : await _adminService.fetchAllItems(
+                            context: context, inStock: value - 1);
+
+                    setState(() {});
+                  }),
+            ],
+          ),
+        ),
+      ),
       body: itemList == null
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(

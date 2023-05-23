@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/bottom_bar_item.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
+import 'package:pharmacy_buddy/screens/admin/orders_screen.dart';
 import 'package:pharmacy_buddy/screens/admin/posts_screen.dart';
 import 'package:pharmacy_buddy/screens/auth_screen.dart';
 import 'package:pharmacy_buddy/services/shared_preferences.dart';
@@ -13,24 +14,29 @@ enum BarItem { posts, analytics, inbox }
 
 class AdminScreen extends StatefulWidget {
   static const String routeName = '/admin-screen';
-  const AdminScreen({super.key});
+  final int page;
+  const AdminScreen({super.key, this.page = 0});
 
   @override
   State<AdminScreen> createState() => _AdminScreenState();
 }
 
 class _AdminScreenState extends State<AdminScreen> {
-  int _page = BarItem.posts.index;
+  late int _page;
 
   List<Widget> pages = [
     const PostsScreen(),
     const Center(
       child: Text("Analytics Page"),
     ),
-    const Center(
-      child: Text("Inbox Page"),
-    ),
+    const OrdersScreen(),
   ];
+
+  @override
+  void initState() {
+    _page = widget.page;
+    super.initState();
+  }
 
   void updatePages(int page) {
     setState(() {
@@ -109,7 +115,7 @@ class _AdminScreenState extends State<AdminScreen> {
           barItems(_page, BarItem.analytics.index, Icons.analytics_outlined,
               "Analytics Page"),
           barItems(_page, BarItem.inbox.index, Icons.all_inbox_outlined,
-              "Inbox Page"),
+              "Orders Page"),
         ],
       ),
     );

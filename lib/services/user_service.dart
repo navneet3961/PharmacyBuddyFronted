@@ -250,7 +250,7 @@ class UserService {
 
       List<String> items = [];
       List<int> quantities = [];
-      String details = "Items:\n";
+      String details = "";
 
       for (int i = 0; i < order.items.length; i++) {
         items.add(order.items[i].id);
@@ -258,10 +258,6 @@ class UserService {
 
         details += "${i + 1}.\t${order.items[i].toString()}\n";
       }
-
-      details += "\nTotal Cost: ₹${order.totalCost}\n\n";
-      details += "Address:\n${order.address}\n";
-      details += "\nPhone: ${order.phone}\n";
 
       http.Response res = await http.post(
         Uri.parse('$uri/api/v1/order/'),
