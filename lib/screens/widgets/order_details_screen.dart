@@ -6,7 +6,6 @@ import 'package:pharmacy_buddy/models/order.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
 import 'package:pharmacy_buddy/screens/user/my_order_screen.dart';
-import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 import 'package:pharmacy_buddy/services/admin_service.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +65,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         if (isAdmin) {
           Navigator.pushNamedAndRemoveUntil(
               context, AdminScreen.routeName, (route) => false,
-              arguments: 2);
+              arguments: 1);
         } else {
           Navigator.pop(context);
           Navigator.pop(context);
@@ -166,6 +165,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               ),
               const SizedBox(height: 12),
               Stepper(
+                physics: const ClampingScrollPhysics(),
                 currentStep: currentStep,
                 controlsBuilder: (context, details) {
                   if (isAdmin &&
@@ -187,9 +187,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               widget.order.orderedDate + 604800000);
                       DateTime todayDate = DateTime.now();
 
-                      if (todayDate.year <= returnedDate.year &&
-                          todayDate.month <= returnedDate.month &&
-                          todayDate.day <= returnedDate.day) {
+                      if (todayDate.year < returnedDate.year ||
+                          (todayDate.year == returnedDate.year &&
+                              todayDate.month < returnedDate.month) ||
+                          (todayDate.year == returnedDate.year &&
+                              todayDate.month == returnedDate.month &&
+                              todayDate.day <= returnedDate.day)) {
                         return Column(
                           children: [
                             UpdateStatusButton(

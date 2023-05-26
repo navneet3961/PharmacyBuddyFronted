@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pharmacy_buddy/models/user.dart';
 import 'package:pharmacy_buddy/providers/user_provider.dart';
 import 'package:pharmacy_buddy/screens/admin/admin_screen.dart';
+import 'package:pharmacy_buddy/screens/auth_screen.dart';
 import 'package:pharmacy_buddy/screens/user/user_bottom_bar.dart';
 import 'package:pharmacy_buddy/services/shared_preferences.dart';
 import 'package:pharmacy_buddy/utils/error_handling.dart';
@@ -38,6 +39,7 @@ class AuthService {
         context: context,
         onSuccess: () {
           showSnackBar(context, "Account created successfully!");
+          Navigator.popAndPushNamed(context, AuthScreen.routeName);
         },
       );
     } catch (error) {
@@ -86,7 +88,7 @@ class AuthService {
     }
   }
 
-  void getUser({
+  Future<bool> getUser({
     required BuildContext context,
   }) async {
     try {
@@ -114,6 +116,8 @@ class AuthService {
     } catch (error) {
       showSnackBar(context, error.toString());
     }
+
+    return false;
   }
 
   void updateUser({

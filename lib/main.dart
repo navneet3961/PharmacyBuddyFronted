@@ -27,13 +27,21 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-
+  bool load = true;
   final AuthService authService = AuthService();
 
   @override
   void initState() {
     super.initState();
-    authService.getUser(context: context);
+    setUser();
+  }
+
+  void setUser() async {
+    var res = await authService.getUser(context: context);
+
+    setState(() {
+      load = res;
+    });
   }
 
   @override
@@ -55,10 +63,14 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
         onGenerateRoute: (settings) => generateRoute(settings),
-        home: Provider.of<UserProvider>(context).user.id.isNotEmpty
-            ? Provider.of<UserProvider>(context).user.isAdmin
-                ? const AdminScreen()
-                : const UserBottomBar()
-            : const AuthScreen());
+        home: load
+            ? const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              )
+            : Provider.of<UserProvider>(context).user.id.isNotEmpty
+                ? Provider.of<UserProvider>(context).user.isAdmin
+                    ? const AdminScreen()
+                    : const UserBottomBar()
+                : const AuthScreen());
   }
 }

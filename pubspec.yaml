@@ -41,6 +41,11 @@ dependencies:
   shared_preferences: ^2.1.0
   file_picker: ^5.3.0
   cloudinary_public: ^0.21.0
+  flutter_native_splash: ^2.3.0
+
+flutter_native_splash:
+  image: assets/images/logo.png
+  color: "f9f9f9"
 
 dev_dependencies:
   flutter_test:

@@ -10,7 +10,7 @@ import 'package:pharmacy_buddy/services/shared_preferences.dart';
 import 'package:pharmacy_buddy/utils/constants.dart';
 import 'package:provider/provider.dart';
 
-enum BarItem { posts, analytics, inbox }
+enum BarItem { posts, inbox, analytics }
 
 class AdminScreen extends StatefulWidget {
   static const String routeName = '/admin-screen';
@@ -26,10 +26,10 @@ class _AdminScreenState extends State<AdminScreen> {
 
   List<Widget> pages = [
     const PostsScreen(),
-    const Center(
-      child: Text("Analytics Page"),
-    ),
     const OrdersScreen(),
+    // const Center(
+    //   child: Text("Analytics Page"),
+    // ),
   ];
 
   @override
@@ -112,8 +112,8 @@ class _AdminScreenState extends State<AdminScreen> {
         items: [
           barItems(
               _page, BarItem.posts.index, Icons.home_outlined, "Home Page"),
-          barItems(_page, BarItem.analytics.index, Icons.analytics_outlined,
-              "Analytics Page"),
+          // barItems(_page, BarItem.analytics.index, Icons.analytics_outlined,
+          //     "Analytics Page"),
           barItems(_page, BarItem.inbox.index, Icons.all_inbox_outlined,
               "Orders Page"),
         ],

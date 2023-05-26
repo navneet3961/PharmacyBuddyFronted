@@ -6,7 +6,7 @@ class Order {
   final String id;
   final int qty;
   final String details;
-  final dynamic orderedDate;
+  final int orderedDate;
   final List<Item> items;
   final double totalCost;
   final String address;
@@ -18,7 +18,7 @@ class Order {
     this.id = '',
     this.qty = 0,
     this.details = '',
-    this.orderedDate = '',
+    this.orderedDate = 0,
     required this.items,
     required this.totalCost,
     required this.address,
@@ -54,7 +54,7 @@ class Order {
       details: map['details'],
       orderedDate: map['orderedDate'],
       items: list,
-      totalCost: map['totalCost'],
+      totalCost: double.parse(map['totalCost'].toString()),
       address: map['address'],
       phone: map['phone'],
       status: map['status'],
@@ -69,7 +69,7 @@ class Order {
       details: map['details'],
       orderedDate: map['orderedDate'],
       items: [],
-      totalCost: map['totalCost'],
+      totalCost: double.parse(map['totalCost'].toString()),
       address: map['address'],
       phone: map['phone'],
       status: map['status'],

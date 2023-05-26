@@ -14,15 +14,14 @@ class UserInfoBar extends StatelessWidget {
           text: TextSpan(
         text: "Hello, ",
         style: const TextStyle(
+          color: Colors.black,
           fontSize: 20,
         ),
         children: [
           TextSpan(
             text: user.name,
             style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
+                fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black),
           ),
         ],
       )),

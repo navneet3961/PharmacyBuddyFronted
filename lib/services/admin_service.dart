@@ -63,7 +63,8 @@ class AdminService {
         context: context,
         onSuccess: () {
           showSnackBar(context, "Item added successfully!");
-          Navigator.pop(context);
+          Navigator.pushNamedAndRemoveUntil(
+              context, AdminScreen.routeName, (route) => false);
         },
       );
     } catch (e) {

@@ -103,8 +103,7 @@ class _UpdateItemScreenState extends State<UpdateItemScreen> {
                 CustomTextFormField(
                   controller: _descriptionController,
                   hintText: "Description",
-                  maxLines: 5,
-                  maxLength: 250,
+                  maxLines: 10,
                   counterText: null,
                 ),
                 const SizedBox(height: 12),

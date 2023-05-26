@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pharmacy_buddy/common-widgets/custom_text.dart';
 import 'package:pharmacy_buddy/models/order.dart';
 import 'package:pharmacy_buddy/screens/widgets/order_card.dart';
+import 'package:pharmacy_buddy/screens/widgets/search_box.dart';
 import 'package:pharmacy_buddy/services/admin_service.dart';
+import 'package:pharmacy_buddy/utils/constants.dart';
 
 const List<String> status = [
   "All",
@@ -23,6 +25,8 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  List<Order>? allOrdersList;
   List<Order>? orderList;
   int _value = 0;
   final AdminService _adminService = AdminService();
@@ -34,39 +38,85 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   void fetchAllOrders() async {
-    orderList = await _adminService.fetchOrders(context: context);
+    allOrdersList = await _adminService.fetchOrders(context: context);
+    orderList = allOrdersList;
 
     setState(() {});
+  }
+
+  void fetchOrderById(String orderId) {
+    orderList = [];
+
+    for (int i = 0; i < allOrdersList!.length; i++) {
+      if (allOrdersList![i].id == orderId) {
+        orderList!.add(allOrdersList![i]);
+        break;
+      }
+    }
+
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Text("Show results by status: "),
-              DropdownButton(
-                  value: _value,
-                  items: [0, 1, 2, 3, 4, 5, 6]
-                      .map((e) =>
-                          DropdownMenuItem(value: e, child: Text(status[e])))
-                      .toList(),
-                  onChanged: (value) async {
-                    _value = value!;
-                    orderList = value == 0
-                        ? await _adminService.fetchOrders(context: context)
-                        : await _adminService.fetchOrders(
-                            context: context, status: value - 1);
+        preferredSize: const Size.fromHeight(120),
+        child: Column(
+          children: [
+            AppBar(
+              automaticallyImplyLeading: false,
+              elevation: 0,
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: GlobalVariables.appBarGradient,
+                ),
+              ),
+              title: Container(
+                width: double.infinity,
+                height: 40,
+                margin: const EdgeInsets.all(10),
+                child: SearchBox(
+                  callback: fetchOrderById,
+                  controller: _searchController,
+                  hintText: "Search Orders By Id",
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text("Show results by status: "),
+                    DropdownButton(
+                        value: _value,
+                        items: [0, 1, 2, 3, 4, 5, 6]
+                            .map((e) => DropdownMenuItem(
+                                value: e, child: Text(status[e])))
+                            .toList(),
+                        onChanged: (value) async {
+                          _value = value!;
+                          orderList = value == 0
+                              ? await _adminService.fetchOrders(
+                                  context: context)
+                              : await _adminService.fetchOrders(
+                                  context: context, status: value - 1);
 
-                    setState(() {});
-                  }),
-            ],
-          ),
+                          setState(() {});
+                        }),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: orderList == null

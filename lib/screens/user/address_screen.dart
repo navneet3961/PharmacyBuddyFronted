@@ -205,7 +205,7 @@ Future<dynamic> showAbout(
               Navigator.pushNamed(context, ConfirmOrderScreen.routeName,
                   arguments: address.toString());
             },
-            child: const Text("Proceed with this address"),
+            child: const Text("Proceed"),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(false),
